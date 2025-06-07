@@ -1,0 +1,210 @@
+/* General styles */
+body {
+    font-family: Montserrat;
+    background: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Header */
+header {
+    background: #0044cc;
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+}
+
+header p {
+    font-size: 16px;
+}
+
+/* Search Container */
+.search-container {
+    margin: 40px auto;
+    max-width: 600px;
+}
+
+#search-form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#search-input {
+    width: 70%;
+    padding: 12px;
+    border: 2px solid #0044cc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+#search-button {
+    background: #0044cc;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+#search-button:hover {
+    background: #002b80;
+}
+
+/* Featured Books */
+.featured-books {
+    margin-top: 40px;
+    padding: 20px;
+}
+
+.book-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Search Results */
+#results {
+    display: none;
+    margin-top: 30px;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.book-card {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.book-card:hover {
+    transform: scale(1.05);
+}
+
+
+
+/* Book Image Styling */
+.book-result {
+    /* width: 220px; */
+    /* background: white; */
+    /* border-radius: 8px; */
+    /* box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1); */
+    /* padding: 15px; */
+    /* text-align: center; */
+    transition: transform 0.3s ease-in-out;
+}
+
+.book-result:hover {
+    transform: scale(1.05);
+    border: 1px solid #212327;
+    border-radius: 8px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-result img {
+    width: 100%;
+    /* Make images fit within the card */
+    height: 250px;
+    /* Set a uniform height */
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Ensure text fits well */
+.book-result h3 {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.book-result p {
+    font-size: 14px;
+    color: gray;
+}
+
+
+/* Main Content */
+#book-details {
+    margin: 40px auto;
+    max-width: 800px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Feature Books */
+
+
+.book-card {
+    width: 200px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.book-card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.book-card h3 {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.book-card p {
+    font-size: 14px;
+    color: gray;
+}
+
+/* Featured Books Animation */
+.book-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-in-out forwards;
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pop-Out Hover Effect */
+.book-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.book-card:hover {
+    transform: scale(1.05);
+    box-shadow: 4px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+footer {
+    background: #0044cc;
+    color: white;
+    padding: 10px;
+    margin-top: 50px;
+}
