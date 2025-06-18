@@ -12,7 +12,7 @@ form.addEventListener("submit", (e) => {
 
   // Basic validation
   if (username.length < 3 || password.length < 6) {
-    showFeedback("Username must be at least 3 characters and password 6+ characters.", "crimson");
+    showStyledAlert("Username must be at least 3 characters and password 6+ characters.", "crimson");
     return;
   }
 
@@ -22,34 +22,40 @@ form.addEventListener("submit", (e) => {
   if (existingUser) {
     if (existingUser.password === password) {
       localStorage.setItem("currentUser", JSON.stringify(existingUser));
-      showFeedback(`Welcome back, ${username}!`, "green");
+      showStyledAlert(`Welcome back, ${username}!`, "green");
       setTimeout(() => {
         window.location.href = "index.html";
       }, 5000);
     } else {
-      showFeedback("Incorrect password. Try again.", "crimson");
+      showStyledAlert("Incorrect password. Try again.", "crimson");
     }
   } else {
     const newUser = { username, password };
     users.push(newUser);
     localStorage.setItem("libraryUsers", JSON.stringify(users));
     localStorage.setItem("currentUser", JSON.stringify(newUser));
-    showFeedback(`Account created! Welcome, ${username}.`, "#0044cc");
+    showStyledAlert(`Account created! Welcome, ${username}.`, "#0044cc");
     setTimeout(() => {
       window.location.href = "index.html";
     }, 5000);
   }
 });
 
-// Reusable feedback function for consistency
-function showFeedback(message, color = "#0044cc") {
-    const alertBox = document.getElementById("alert-box");
-    alertBox.textContent = message;
-    alertBox.style.backgroundColor = color;
-    alertBox.classList.add("show");
-  
-    setTimeout(() => {
-      alertBox.classList.remove("show");
-    }, 5000);
+function showStyledAlert(message, color = "#0044cc") {
+  let alertBox = document.getElementById("styled-alert");
+
+  if (!alertBox) {
+    alertBox = document.createElement("div");
+    alertBox.id = "styled-alert";
+    document.body.appendChild(alertBox);
   }
-  
+
+  alertBox.textContent = message;
+  alertBox.style.backgroundColor = color;
+  alertBox.classList.add("show");
+
+  setTimeout(() => {
+    alertBox.classList.remove("show");
+  }, 5000);
+}
+

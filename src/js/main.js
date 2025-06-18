@@ -31,40 +31,80 @@ form.addEventListener('submit', async (e) => {
 
   books.forEach(book => {
     const bookItem = document.createElement("div");
-    bookItem.classList.add("book-result");
+    bookItem.classList.add("book-card");
     bookItem.innerHTML = `
       <img src="${book.thumbnail || './images/default-book.png'}" alt="${book.title}">
-      <div>
-        <h3><a href="book-details.html?id=${encodeURIComponent(book.id)}">${book.title}</a></h3>
-        <p>${book.authors ? book.authors.join(', ') : 'Unknown Author'}</p>
-        <p>${book.publishedDate || 'No Date Available'}</p>
-        <button class="borrow-btn" data-book-id="${book.id}">Borrow</button> 
-      </div>
+      <h3>
+        <a href="book-details.html?id=${encodeURIComponent(book.id)}">${book.title}</a> <!-- ✅ Title is clickable -->
+      </h3>
+      <p><strong>Author:</strong> ${book.authors ? book.authors.join(', ') : 'Unknown Author'}</p>
+      <p><strong>Published:</strong> ${book.publishedDate || 'No Date Available'}</p>
     `;
     booksGrid.appendChild(bookItem);
   });
 
-  resultsSection.appendChild(booksGrid);
 
-  attachBorrowListeners(); // ✅ Wire up borrow buttons after rendering
+  resultsSection.appendChild(booksGrid);
+  setTimeout(() => attachBorrowListeners(), 100);
+  // attachBorrowListeners();
 });
 
-// 🔐 Attach Borrow Button Functionality
+// 🎯 **Fetch Recommended Books from JSON**
+fetch('./js/books.json')
+  .then(response => response.json())
+  .then(books => displayRecommendedBooks(books))
+  .catch(error => console.error("Error loading book data:", error));
+
+function displayRecommendedBooks(books) {
+  const recommendedBooksContainer = document.getElementById("recommended-books");
+  recommendedBooksContainer.innerHTML = "";
+
+  books.forEach(book => {
+    const bookCard = document.createElement("div");
+    bookCard.classList.add("book-card");
+    bookCard.innerHTML = `
+      <img src="${book.cover_image}" alt="${book.title}" width="120">
+      <h3>${book.title}</h3>
+      <p><strong>Author:</strong> ${book.author}</p>
+      <p><strong>Genre:</strong> ${book.genre}</p>
+      <p><strong>Published:</strong> ${book.publication_year}</p>
+      <p><strong>Rating:</strong> ${book.rating} ⭐ (${book.reviews} reviews)</p>
+    `;
+    recommendedBooksContainer.appendChild(bookCard);
+  });
+
+  attachBorrowListeners();
+}
+
+
+
+
+
+// Borrowing function
 function attachBorrowListeners() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const borrowButtons = document.querySelectorAll(".borrow-btn");
+
+  if (!borrowButtons.length) {
+    console.error("No borrow buttons found in DOM!");
+    return;
+  }
 
   borrowButtons.forEach(btn => {
     if (currentUser) {
       btn.style.display = "inline-block";
       btn.addEventListener("click", () => {
         const bookId = btn.dataset.bookId;
-        handleBorrow(bookId, currentUser.username);
+        const book = books.find(b => b.id === bookId);
+        if (!book) {
+          console.error("Book data missing for ID:", bookId);
+          return;
+        }
+        handleBorrow(book, currentUser.username);
       });
 
-      // ✅ Check if already borrowed & update UI instantly
       const borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || {};
-      if (borrowedBooks[currentUser.username]?.includes(btn.dataset.bookId)) {
+      if (borrowedBooks[currentUser.username]?.some(b => b.book_id === btn.dataset.bookId)) {
         btn.textContent = "Borrowed ✔";
         btn.disabled = true;
       }
@@ -74,114 +114,30 @@ function attachBorrowListeners() {
   });
 }
 
-// 👋 Show User Greeting in Header
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-if (currentUser) {
-  const greeting = document.createElement("p");
-  greeting.textContent = `Welcome, ${currentUser.username}!`;
-  document.querySelector("header").appendChild(greeting);
 
-  setTimeout(() => {
-    alertBox.classList.remove("show");
-  }, 5000);
-}
-
-// 📚 Handle Book Borrowing
-function handleBorrow(bookId, username) {
-  const borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || {};
-  borrowedBooks[username] = borrowedBooks[username] || [];
-
-  if (!borrowedBooks[username].includes(bookId)) {
-    borrowedBooks[username].push(bookId);
-    localStorage.setItem("borrowedBooks", JSON.stringify(borrowedBooks));
-    showAlert("Book borrowed successfully!", "green");
-
-    // 🔄 Update Button UI instantly
-    const borrowBtn = document.querySelector(`[data-book-id="${bookId}"]`);
-    borrowBtn.textContent = "Borrowed ✔";
-    borrowBtn.disabled = true;
-  } else {
-    showAlert("You have already borrowed this book.", "orange");
+// Search History
+function saveSearchHistory(query) {
+  let searches = JSON.parse(localStorage.getItem("searchHistory")) || [];
+  if (!searches.includes(query)) {
+    searches.unshift(query); // Add to the start of the list
+    if (searches.length > 5) searches.pop(); // Limit to last 5 searches
+    localStorage.setItem("searchHistory", JSON.stringify(searches));
   }
 }
-
-// 🔔 Show Alert Messages
-function showAlert(message, color = "#0044cc") {
-  const alertBox = document.getElementById("alert-box");
-  alertBox.textContent = message;
-  alertBox.style.backgroundColor = color;
-  alertBox.classList.add("show");
-
-  setTimeout(() => {
-    alertBox.classList.remove("show");
-  }, 5000);
-}
-
 
 document.addEventListener("DOMContentLoaded", () => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const borrowedLink = document.querySelector(".borrowed-link");
+  const historyContainer = document.getElementById("search-history");
+  const searches = JSON.parse(localStorage.getItem("searchHistory")) || [];
 
-  if (!currentUser) {
-    borrowedLink.style.display = "none";
-  }
+  historyContainer.innerHTML = searches.map(q => `<li>${q}</li>`).join("");
 });
 
-
 document.addEventListener("DOMContentLoaded", () => {
-  const recommendationsSection = document.getElementById("recommendations");
-  const recommendedBooksContainer = document.getElementById("recommended-books");
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
-  // Hide recommendations if no user is logged in
-  if (!currentUser) return;
-
-  recommendationsSection.style.display = "block";
-
-  const borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || {};
-  const userBooks = borrowedBooks[currentUser.username] || [];
-
-  let recommendedList = [];
-
-  if (userBooks.length > 0) {
-    recommendedList = getRecommendations(userBooks);
-  } else {
-    recommendedList = fixedRecommendations(); // Use fallback books
-  }
-
-  console.log("Generated recommendations:", recommendedList); // ✅ Debugging line
-
-  if (recommendedList.length === 0) {
-    recommendedBooksContainer.innerHTML = "<p>No recommendations available.</p>";
-    return;
-  }
-
-  recommendedList.forEach(book => {
-    const bookCard = document.createElement("div");
-    bookCard.classList.add("book-card");
-    bookCard.innerHTML = `
-          <img src="${book.thumbnail}" alt="${book.title}">
-          <h3>${book.title}</h3>
-          <p>${book.authors.join(", ")}</p>
-          <p>${book.publishedDate || "No Date Available"}</p>
+  const lastBook = JSON.parse(localStorage.getItem("lastVisitedBook"));
+  if (lastBook) {
+    document.getElementById("last-book-container").innerHTML = `
+          <h3>Last Viewed: ${lastBook.title}</h3>
+          <a href="book-details.html?id=${lastBook.id}">Continue Reading</a>
       `;
-    recommendedBooksContainer.appendChild(bookCard);
-  });
+  }
 });
-
-
-
-
-
-// Example Functions for Recommendations
-function getRecommendations(borrowedBooks) {
-  const genres = borrowedBooks.map(book => book.genre); // Assuming genre is stored
-  return recommendedBooks.filter(book => genres.includes(book.genre)); // Filter by genre match
-}
-
-function fixedRecommendations() {
-  return [
-    { title: "The Great Gatsby", authors: ["F. Scott Fitzgerald"], publishedDate: "1925", thumbnail: "./images/gatsby.png" },
-    { title: "1984", authors: ["George Orwell"], publishedDate: "1949", thumbnail: "./images/1984.png" }
-  ];
-}

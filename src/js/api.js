@@ -14,27 +14,17 @@ export async function searchBooks(query) {
     }));
 }
 
-export async function getBookDetails(id) {
-    // Google Books API for details
-    const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
-    const data = await res.json();
-    if (!data.volumeInfo) return null;
+export async function getBookDetails(bookId) {
+    const response = await fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`);
+    const data = await response.json();
+    console.log("Raw API response:", data); // ✅ Debugging output
 
-    // Optionally, fetch more metadata from Library of Congress here
-
+    // Validate missing fields and provide defaults
     return {
-        id: data.id,
-        title: data.volumeInfo.title,
-        authors: data.volumeInfo.authors,
-        publishedDate: data.volumeInfo.publishedDate,
-        thumbnail: data.volumeInfo.imageLinks?.thumbnail,
-        description: data.volumeInfo.description,
+        title: data.volumeInfo?.title || "Unknown Title",
+        authors: data.volumeInfo?.authors || ["Unknown Author"],
+        publishedDate: data.volumeInfo?.publishedDate || "N/A",
+        description: data.volumeInfo?.description || "No description available.",
+        thumbnail: data.volumeInfo?.imageLinks?.thumbnail || "./images/default-book.png"
     };
 }
-
-
-
-
-
-
-  // You can add Library of Congress API integration for book-details page

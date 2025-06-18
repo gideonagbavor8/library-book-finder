@@ -19,7 +19,9 @@
         <h1>📚 Library Book Finder</h1>
         <p>Find books quickly and request a borrow with ease.</p>
         <a href="auth.html" class="auth-link">Login / Register</a>
+        <button id="dark-mode-toggle">🌙 Dark Mode</button>
         <a href="borrowed-books.html" class="borrowed-link">📖 My Borrowed Books</a>
+        <a href="dashboard.html" class="dashboard-link">📊 My Dashboard</a>
     </header>    
 
     <main>
@@ -37,11 +39,13 @@
             </div>
         </section>
 
-        <section id="recommendations">
+        <!-- <section id="recommendations">
             <h2>📚 Recommended for You</h2>
             <div class="books-grid" id="recommended-books"></div>
-        </section>
+        </section> -->
         
+        <section id="last-book-container"></section>
+
 
         <section id="results">
             <h2>Search Results</h2>
@@ -58,6 +62,8 @@
 
     <script type="module" src="js/main.js"></script>
     <script src="js/layout.js"></script>
+    <script src="js/darkMode.js"></script>
+
 </body>
 
 </html>

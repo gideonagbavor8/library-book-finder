@@ -1,0 +1,33 @@
+[
+    {
+        "book_id": 301,
+        "title": "Deep Learning with Python",
+        "author": "François Chollet",
+        "genre": "Artificial Intelligence",
+        "publication_year": 2018,
+        "isbn": "978-1617294433",
+        "availability": "Available",
+        "library_branch": "Downtown Library",
+        "location": "Shelf A5",
+        "cover_image": "./images/deep-learning.jpg",
+        "summary": "An expert guide on deep learning techniques using Python and Keras.",
+        "rating": 4.7,
+        "reviews": 620
+    },
+    {
+        "book_id": 302,
+        "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+        "author": "Robert C. Martin",
+        "genre": "Software Engineering",
+        "publication_year": 2008,
+        "isbn": "978-0132350884",
+        "availability": "Checked Out",
+        "library_branch": "Central Library",
+        "due_date": "2025-06-28",
+        "location": "Shelf B6",
+        "cover_image": "./images/clean-code.jpg",
+        "summary": "A must-read for developers striving for clean, maintainable code.",
+        "rating": 4.9,
+        "reviews": 1050
+    }
+]

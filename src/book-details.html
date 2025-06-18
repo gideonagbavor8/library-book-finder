@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,9 +14,44 @@
         <a href="index.html">← Back to Search</a>
     </header>
     <main id="book-details">
-        <!-- Book details will be loaded here -->
+
     </main>
     <script type="module" src="js/bookDetails.js"></script>
+    <script src="js/darkMode.js"></script>
+
+</body>
+
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Details</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body>
+    <header>
+        <h1>Book Details</h1>
+        <a href="index.html">← Back to Search</a>
+    </header>
+    <main>
+        <section id="book-details-container">
+            <img id="book-thumbnail" src="" alt="Book Cover">
+            <h2 id="book-title"></h2>
+            <p><strong>Author:</strong> <span id="book-author"></span></p>
+            <p><strong>Published:</strong> <span id="book-date"></span></p>
+            <p><strong>Genre:</strong> <span id="book-genre"></span></p>
+            <button id="borrow-btn">Borrow</button>
+        </section>
+    </main>
+    <script type="module" src="js/bookDetails.js"></script>
+    <script src="js/darkMode.js"></script>
+
 </body>
 
 </html>
